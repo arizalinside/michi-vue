@@ -21,34 +21,54 @@
         <Sidebar />
       </b-sidebar>
       <b-row>
-        <b-col
-          cols="12"
-          lg="2"
-          class="item-menu"
-          v-for="(item, index) in products"
-          :key="index"
-        >
-          <b-card
-            :title="item.product_name"
-            img-src="https://picsum.photos/600/300/?image=25"
-            img-alt="Image"
-            img-top
-            tag="article"
-            class="mb-2"
-          >
-            <b-card-text>
-              <p>
-                Rp.
-                {{ item.product_price }}
-              </p>
-            </b-card-text>
+        <b-col cols="12" lg="8">
+          <b-form v-on:submit.prevent="searchProduct" inline>
+            <b-input
+              placeholder="Search.."
+              v-model="keyword"
+              class="search-item"
+            ></b-input>
+          </b-form>
+          <b-row>
+            <b-col
+              cols="12"
+              lg="4"
+              class="item-menu"
+              v-for="(item, index) in products"
+              :key="index"
+            >
+              <b-card
+                :title="item.product_name"
+                img-src="https://picsum.photos/600/300/?image=25"
+                img-alt="Image"
+                img-top
+                tag="article"
+                class="mb-2"
+              >
+                <b-card-text>
+                  <p>
+                    Rp.
+                    {{ item.product_price }}
+                  </p>
+                </b-card-text>
 
-            <b-button href="#" variant="primary">Go somewhere</b-button>
-          </b-card>
+                <b-button href="#" variant="primary">Go somewhere</b-button>
+              </b-card>
+            </b-col>
+            <div class="mt-3 item-pagination">
+              <b-pagination
+                v-model="currentPage"
+                pills
+                :total-rows="totalData"
+                :per-page="limit"
+                @change="pageChange"
+                v-show="showPagination"
+              ></b-pagination>
+            </div>
+          </b-row>
         </b-col>
         <b-col cols="12" lg="4" class="item-cart"> </b-col>
       </b-row>
-      <Card />
     </b-container>
   </div>
 </template>
@@ -58,23 +78,23 @@
 import axios from 'axios'
 import Header from '@/components/_base/Header.vue'
 import Sidebar from '@/components/_base/Sidebar.vue'
-import Card from '@/components/_base/Card.vue'
 
 export default {
   name: 'Home',
   components: {
     Header,
-    Sidebar,
-    Card
+    Sidebar
   },
   data() {
     return {
       title: 'Michi POS',
       cart: [],
       page: 1,
-      limit: 3,
+      limit: 6,
       sort: 'product_name',
-      products: []
+      keyword: '',
+      products: [],
+      showPagination: true
     }
   },
   created() {
@@ -93,6 +113,20 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    searchProduct() {
+      if (this.keyword === '') {
+        this.getProduct()
+        this.showPagination = true
+      } else {
+        axios
+          .get(`http://127.0.0.1:3001/product/search?search=${this.keyword}`)
+          .then(response => {
+            this.showPagination = false
+            this.product = response.data.data.searchResult
+            this.totalData = response.data.data.totalData
+          })
+      }
     }
   },
   computed: {
