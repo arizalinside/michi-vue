@@ -8,11 +8,8 @@
           style="cursor= pointer;"
         />
       </b-col>
-      <b-col cols="8">
+      <b-col cols="10">
         <p>{{ text }}</p>
-      </b-col>
-      <b-col cols="2">
-        <img :src="require('@/assets/images/icons/magnifying-glass.png')" />
       </b-col>
     </b-row>
   </div>
@@ -32,10 +29,11 @@ export default {
 }
 
 .header-container .col-2 {
-  padding-top: 18px;
+  height: 60px;
+  margin-top: 15px;
 }
 
-.header-container .col-8 p {
+.header-container .col-10 p {
   padding-top: 10px;
   font-size: 32px;
 }
