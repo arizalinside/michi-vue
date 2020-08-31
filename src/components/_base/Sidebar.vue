@@ -4,7 +4,7 @@
       :src="require('@/assets/images/admin/cat.png')"
       size="10em"
     ></b-avatar>
-    <h5 class="admin">{{ user }}</h5>
+    <h5 class="cashier">{{ user }}</h5>
     <hr />
     <b-navbar variant="faded" type="light">
       <b-navbar-brand href="/">
@@ -44,7 +44,7 @@ export default {
   name: 'Sidebar',
   data() {
     return {
-      user: 'Admin'
+      user: 'Pevita Pearce'
     }
   }
 }
@@ -52,14 +52,14 @@ export default {
 
 <style>
 .b-avatar {
-  margin: 20px 0 0 64px;
+  margin: 20px 0 0 60px;
 }
 
 .b-avatar .b-avatar-img img {
   object-fit: cover;
 }
 
-.admin {
+.cashier {
   text-align: center;
   margin-top: 10px;
 }
