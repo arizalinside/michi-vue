@@ -13,39 +13,77 @@
           </p>
         </b-col>
       </b-row>
-      <b-sidebar id="sidebar-backdrop" :title="msg" backdrop-variant="dark" backdrop shadow>
+      <b-sidebar
+        id="sidebar-backdrop"
+        :title="msg"
+        backdrop-variant="dark"
+        backdrop
+        shadow
+      >
         <Sidebar />
       </b-sidebar>
       <b-row>
         <b-col cols="12" lg="8" class="menu-side">
-          <b-form v-on:submit.prevent="searchProduct" inline>
-            <b-input placeholder="Search.." v-model="keyword" class="search-item"></b-input>
-            <b-button variant="info" type="submit" class="ml-md-2">Search</b-button>
+          <b-form v-on:submit.prevent="search" inline>
+            <b-input
+              placeholder="Search.."
+              v-model="keyword"
+              class="search-item"
+            ></b-input>
+            <b-button variant="info" type="submit" class="ml-md-2"
+              >Search</b-button
+            >
 
-            <b-dropdown id="sort" :text="sortText" class="m-2 sort-btn" variant="info">
-              <b-dropdown-item-button @click="sortCategory()" active>Category</b-dropdown-item-button>
+            <b-dropdown
+              id="sort"
+              :text="sortText"
+              class="m-2 sort-btn"
+              variant="info"
+              v-show="!isSearch"
+            >
+              <b-dropdown-item-button @click="sortCategory()" active
+                >Category</b-dropdown-item-button
+              >
               <b-dropdown-divider></b-dropdown-divider>
               <b-dropdown-group id="dropdown-group-1" header="Name">
-                <b-dropdown-item-button @click="sortNameAsc()">A-Z</b-dropdown-item-button>
-                <b-dropdown-item-button @click="sortNameDesc()">Z-A</b-dropdown-item-button>
+                <b-dropdown-item-button @click="sortNameAsc()"
+                  >A-Z</b-dropdown-item-button
+                >
+                <b-dropdown-item-button @click="sortNameDesc()"
+                  >Z-A</b-dropdown-item-button
+                >
               </b-dropdown-group>
               <b-dropdown-divider></b-dropdown-divider>
               <b-dropdown-group id="dropdown-group-2" header="Date">
-                <b-dropdown-item-button @click="sortDateAsc()">Oldest</b-dropdown-item-button>
-                <b-dropdown-item-button @click="sortDateDesc()">Newest</b-dropdown-item-button>
+                <b-dropdown-item-button @click="sortDateAsc()"
+                  >Newest</b-dropdown-item-button
+                >
+                <b-dropdown-item-button @click="sortDateDesc()"
+                  >Oldest</b-dropdown-item-button
+                >
               </b-dropdown-group>
               <b-dropdown-divider></b-dropdown-divider>
               <b-dropdown-group id="dropdown-group-3" header="Price">
-                <b-dropdown-item-button @click="sortPriceAsc()">Lowest</b-dropdown-item-button>
-                <b-dropdown-item-button @click="sortPriceDesc()">Highest</b-dropdown-item-button>
+                <b-dropdown-item-button @click="sortPriceAsc()"
+                  >Lowest</b-dropdown-item-button
+                >
+                <b-dropdown-item-button @click="sortPriceDesc()"
+                  >Highest</b-dropdown-item-button
+                >
               </b-dropdown-group>
             </b-dropdown>
           </b-form>
           <b-row>
-            <b-col cols="12" lg="4" class="item-menu" v-for="(item, index) in product" :key="index">
+            <b-col
+              cols="12"
+              lg="4"
+              class="item-menu"
+              v-for="(item, index) in product"
+              :key="index"
+            >
               <b-card
                 :title="item.product_name"
-                img-src="https://picsum.photos/600/300/?image=25"
+                :img-src="'http://127.0.0.1:3001/' + item.product_image"
                 img-alt="Image"
                 img-top
                 tag="article"
@@ -65,7 +103,8 @@
                   class="atc-button"
                   @click="addCart(item)"
                   v-if="!checkCart(item)"
-                >Add to Cart</b-button>
+                  >Add to Cart</b-button
+                >
                 <b-button
                   pill
                   variant="outline-danger"
@@ -73,8 +112,9 @@
                   class="atc-button"
                   @click="removeCart(item)"
                   v-else
-                >Remove from Cart</b-button>
-                <b-button
+                  >Remove from Cart</b-button
+                >
+                <!-- <b-button
                   pill
                   variant="outline-primary"
                   size="sm"
@@ -88,13 +128,14 @@
                     size="sm"
                     class="atc-button"
                     @click="showMsgBoxTwo(item)"
-                  >Delete</b-button>
-                </div>
+                >Delete</b-button>-->
+                <!-- </div> -->
               </b-card>
             </b-col>
+
             <div class="mt-3 item-pagination">
               <b-pagination
-                v-model="page"
+                v-model="currentPage"
                 pills
                 :total-rows="totalData"
                 :per-page="limit"
@@ -118,18 +159,34 @@
           <div class="cart-overflow">
             <b-row v-for="(item, index) in cart" :key="index" class="cart-list">
               <b-col cols="4">
-                <b-img :src="img" class="cart-image" fluid />
+                <b-img
+                  :src="'http://127.0.0.1:3001/' + item.product_image"
+                  class="cart-image"
+                  fluid
+                />
               </b-col>
               <b-col cols="5" style="padding: 0">
                 <p class="cart-name">{{ item.product_name }}</p>
                 <b-input-group class="qty-group">
-                  <b-button class="plus-minus" variant="success" @click="minus(item)">-</b-button>
+                  <b-button
+                    class="plus-minus"
+                    variant="success"
+                    @click="minus(item)"
+                    >-</b-button
+                  >
                   <input type="text" v-model="item.qty" class="qty" />
-                  <b-button class="plus-minus" variant="success" @click="plus(item)">+</b-button>
+                  <b-button
+                    class="plus-minus"
+                    variant="success"
+                    @click="plus(item)"
+                    >+</b-button
+                  >
                 </b-input-group>
               </b-col>
               <b-col cols="3" style="padding: 0" align-self="end">
-                <p class="price-cart">Rp. {{ item.product_price * item.qty }}</p>
+                <p class="price-cart">
+                  Rp. {{ item.product_price * item.qty }}
+                </p>
               </b-col>
             </b-row>
           </div>
@@ -150,18 +207,25 @@
               style="background: #57cad5"
               @click="postOrder(cart)"
               v-b-modal.modal-checkout
-            >Checkout</b-button>
+              >Checkout</b-button
+            >
             <b-button
               class="cancel-btn"
               variant="danger"
               style="background: #F24F8A;"
               @click="cancelCart()"
-            >Cancel</b-button>
+              >Cancel</b-button
+            >
           </b-row>
         </b-col>
       </b-row>
 
-      <b-modal id="modal-checkout" title="Checkout Success" centered hide-footer>
+      <b-modal
+        id="modal-checkout"
+        title="Checkout Success"
+        centered
+        hide-footer
+      >
         <b-row>
           <b-col cols="6">
             <p>Checkout</p>
@@ -196,14 +260,9 @@
             class="checkout-btn"
             variant="info"
             style="background: #57cad5"
-            @click="refresh()"
-          >Print</b-button>
-          <b-button
-            class="checkout-btn"
-            variant="info"
-            style="background: #F24F8A;"
-            @click="refresh()"
-          >Send Email</b-button>
+            @click="endCheck()"
+            >Print</b-button
+          >
         </b-row>
       </b-modal>
     </b-container>
@@ -215,6 +274,7 @@
 import axios from 'axios'
 import Header from '@/components/_base/Header.vue'
 import Sidebar from '@/components/_base/Sidebar.vue'
+import { mapActions, mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
@@ -226,57 +286,74 @@ export default {
     return {
       title: 'Michi POS',
       user: 'Pevita Pearce',
-      cart: [],
-      page: 1,
-      limit: 6,
-      sort: 'product_name',
       sortText: 'Sort',
+      // totalData: 0,
+      // page: 1,
+      // limit: 6,
       keyword: '',
-      product: [],
-      totalData: 0,
+      // sort: 'product_name',
+      // product: [],
+      cart: [],
       setOrder: [],
       img: require('@/assets/images/icons/blank.png'),
       addCartBtn: [],
       showPagination: true,
       invoice: null,
-      boxTwo: ''
+      boxTwo: '',
+      currentPage: 1,
+      isSearch: false
     }
   },
   created() {
     this.getProduct()
   },
   methods: {
-    getProduct() {
-      axios
-        .get(
-          `http://127.0.0.1:3001/product?page=${this.page}&limit=${this.limit}&sort=${this.sort}`
-        )
-        .then((response) => {
-          this.product = response.data.data
-          this.totalData = response.data.pagination.totalData
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    searchProduct() {
+    ...mapActions(['getProduct', 'searchProduct']),
+    ...mapMutations(['removeCart, sortProduct, changePage']),
+    // getProduct() {
+    //   axios
+    //     .get(
+    //       `http://127.0.0.1:3001/product?page=${this.page}&limit=${this.limit}&sort=${this.sort}`
+    //     )
+    //     .then(response => {
+    //       this.keyword = ''
+    //       this.product = response.data.data.result
+    //       this.totalData = response.data.data.pageInfo.totalData
+    //       // console.log(response)
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // searchProduct() {
+    //   if (this.keyword === '') {
+    //     this.page = 1
+    //     this.getProduct()
+    //     this.showPagination = true
+    //   } else {
+    //     axios
+    //       .get(`http://127.0.0.1:3001/product/search?keyword=${this.keyword}`)
+    //       .then(response => {
+    //         // console.log(data)
+    //         this.showPagination = false
+    //         this.sortText = 'Sort'
+    //         this.sort = ''
+    //         this.product = response.data.data.searchResult
+    //         this.totalData = response.data.data.totalData
+    //       })
+    //       .catch(error => {
+    //         console.log(error)
+    //       })
+    //   }
+    // },
+    search() {
       if (this.keyword === '') {
         this.getProduct()
-        this.showPagination = true
+        this.isSearch = false
       } else {
-        axios
-          .get(`http://127.0.0.1:3001/product/search?keyword=${this.keyword}`)
-          .then((response) => {
-            // console.log(data)
-            this.showPagination = false
-            this.sortText = 'Sort'
-            this.sort = ''
-            this.product = response.data.data.searchResult
-            this.totalData = response.data.data.totalData
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+        this.isSearch = true
+        this.sortText = 'Sort'
+        this.searchProduct(this.keyword)
       }
     },
     sortCategory() {
@@ -284,6 +361,7 @@ export default {
       this.sort = 'category_id'
       this.page = 1
       this.showPagination = true
+      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     sortNameAsc() {
@@ -291,6 +369,7 @@ export default {
       this.sort = 'product_name ASC'
       this.page = 1
       this.showPagination = true
+      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     sortNameDesc() {
@@ -298,6 +377,7 @@ export default {
       this.sort = 'product_name DESC'
       this.page = 1
       this.showPagination = true
+      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     sortDateAsc() {
@@ -305,6 +385,7 @@ export default {
       this.sort = 'product_created_at ASC'
       this.page = 1
       this.showPagination = true
+      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     sortDateDesc() {
@@ -312,6 +393,7 @@ export default {
       this.sort = 'product_created_at DESC'
       this.page = 1
       this.showPagination = true
+      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     sortPriceAsc() {
@@ -319,6 +401,7 @@ export default {
       this.sort = 'product_price ASC'
       this.page = 1
       this.showPagination = true
+      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     sortPriceDesc() {
@@ -326,24 +409,28 @@ export default {
       this.sort = 'product_price DESC'
       this.page = 1
       this.showPagination = true
+      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     addCart(data) {
       const setCart = {
         product_id: data.product_id,
         product_name: data.product_name,
+        product_image: data.product_image,
         product_price: data.product_price,
         qty: 1
       }
       this.cart = [...this.cart, setCart]
     },
     checkCart(data) {
-      return this.cart.some((item) => item.product_id === data.product_id)
+      return this.cart.some(item => item.product_id === data.product_id)
     },
     removeCart(data) {
       return this.cart.splice(
-        this.cart.findIndex((item) => item.product_id === data.product_id),
-        1
+        this.cart.splice(
+          this.cart.findIndex(item => item.product_id === data.product_id),
+          1
+        )
       )
     },
     minus(data) {
@@ -357,7 +444,8 @@ export default {
       data.qty += 1
     },
     pageChange(item) {
-      this.page = item
+      this.changePage(item)
+      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     cartCount() {
@@ -379,11 +467,12 @@ export default {
         this.setOrder = [...this.setOrder, dataOrder]
       }
       axios
-        .post('http://127.0.0.1:3001/order', this.setOrder)
-        .then((response) => {
+        .post('http://127.0.0.1:3001/orders', this.setOrder)
+        .then(response => {
           this.invoice = response.data.data.invoice
+          console.log(response)
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error)
         })
     },
@@ -394,53 +483,26 @@ export default {
       location.reload()
       return false
     },
-    setProduct(data) {
-      this.form = {
-        product_name: data.product_name,
-        category_id: data.category_id,
-        product_harga: data.product_harga,
-        product_status: data.product_status
-      }
-      this.isUpdate = true
-      this.product_id = data.product_id
+    endCheck() {
+      this.$bvModal.hide('modal-checkout')
+      this.cart = []
+      this.makeToast('success')
     },
-    deleteProduct(data) {
-      this.productId = data.item.ID
-      axios
-        .delete(`http://127.0.0.1:3001/product/${this.productId}`)
-        .then((response) => {
-          location.reload()
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    showMsgBoxTwo(data) {
-      this.boxTwo = ''
-      this.$bvModal
-        .msgBoxConfirm(
-          `Please confirm that you want to delete ${data.item.product_name}?`,
-          {
-            title: 'Please Confirm',
-            size: 'sm',
-            buttonSize: 'sm',
-            okVariant: 'danger',
-            okTitle: 'YES',
-            cancelTitle: 'NO',
-            footerClass: 'p-2',
-            hideHeaderClose: false,
-            centered: true
-          }
-        )
-        .then((value) => {
-          this.deleteProduct(data)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+    makeToast(variant = null) {
+      this.$bvToast.toast('Checkout Printed', {
+        title: 'Success',
+        variant: variant,
+        solid: true
+      })
     }
   },
   computed: {
+    ...mapGetters({
+      product: 'getProduct',
+      totalData: 'getTotalData',
+      limit: 'getLimit',
+      page: 'getPage'
+    }),
     msg: {
       get() {
         return this.title

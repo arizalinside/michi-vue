@@ -24,17 +24,17 @@
                 <div class="article-container">
                   <p>Today's Income</p>
                   <h3>Rp. {{ todayIncome }}</h3>
-                  <p v-if="todayIncome > prevIncome">
+                  <!-- <p v-if="todayIncome > prevIncome">
                     +{{ profitGrowth() }}% Yesterday
                   </p>
                   <p v-else-if="todayIncome < prevIncome">
                     {{ profitGrowth() }}% Yesterday
-                  </p>
+                  </p> -->
                 </div>
               </article>
             </b-col>
 
-            <b-col cols="12" lg="4" md="6">
+            <!-- <b-col cols="12" lg="4" md="6">
               <article class="orders">
                 <div class="article-container">
                   <p>Orders</p>
@@ -62,12 +62,12 @@
                   </p>
                 </div>
               </article>
-            </b-col>
+            </b-col> -->
           </b-row>
         </b-col>
       </b-row>
 
-      <b-row class="revenue" style="margin: 30px;">
+      <!-- <b-row class="revenue" style="margin: 30px;">
         <b-col cols="12" class="revenue-header">
           <p>Revenue</p>
           <b-dropdown
@@ -136,7 +136,7 @@
             aria-controls="my-table"
           ></b-pagination>
         </div>
-      </b-row>
+      </b-row> -->
     </b-container>
   </div>
 </template>
@@ -161,7 +161,7 @@ export default {
       currentPage: 1,
       items: [],
       chartData: [],
-      currentDate: new Date().toJSON().slice(0, 10),
+      currentDate: new Date().getDate(),
       prevDate: new Date(Date.now - 864e5).toJSON().slice(0, 10),
       prevWeek: new Date(
         new Date().getFullYear(),
@@ -187,286 +187,288 @@ export default {
     }
   },
   created() {
-    this.getHistoryToday()
-    this.getDataChart()
+    // this.getHistoryToday()
+    // this.getDataChart()
     this.getTodayIncome()
-    this.getPrevIncome()
-    this.getYearIncome()
-    this.getPrevYearIncome()
-    this.getCountHistoryWeek()
-    this.getCountHistoryLastWeek()
+    // this.getPrevIncome()
+    // this.getYearIncome()
+    // this.getPrevYearIncome()
+    // this.getCountHistoryWeek()
+    // this.getCountHistoryLastWeek()
   },
   methods: {
-    getHistoryToday() {
-      this.items = []
-      axios
-        .get('http://127.0.0.1:3001/history/today')
-        .then(response => {
-          this.history = response.data.data
-          this.history.map(value => {
-            const setItem = {
-              INVOICES: `#${value.history_invoice}`,
-              CASHIER: this.user,
-              DATE: value.history_created_at.slice(0, 10),
-              ORDERS: value.orders
-                .map(item => item.product_name.concat(` ${item.order_qty}`))
-                .join(', '),
-              AMOUNT: `Rp. ${value.history_subtotal}`
-            }
-            this.items = [...this.items, setItem]
-          })
-          this.text = 'Today'
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    getiHistoryWeek() {
-      this.items = []
-      axios
-        .get('http://127.0.0.1:3001/history/week')
-        .then(response => {
-          this.history = response.data.data
-          this.history.map(value => {
-            const setItem = {
-              INVOICES: `#${value.history_invoices}`,
-              CASHIER: this.user,
-              DATE: value.history_created_at.slice(0, 10),
-              ORDERS: value.orders
-                .map(item => item.product_name.concat(`${item.order_qty}x`))
-                .join(', '),
-              AMOUNT: `Rp. ${value.history_subtotal}`
-            }
-            this.items = [...this.items, setItem]
-          })
-          this.text = 'This Week'
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    getHistoryMonth() {
-      this.items = []
-      axios
-        .get('http://127.0.0.1:3001/history/month')
-        .then(response => {
-          this.history = response.data.data
-          this.history.map(value => {
-            const setItem = {
-              INVOICES: `#${value.history_invoices}`,
-              CASHIER: this.user,
-              DATE: value.history_created_at.slice(0, 10),
-              ORDERS: value.orders
-                .map(item => item.product_name.concat(`${item.order_qty}x`))
-                .join(', '),
-              AMOUNT: `Rp. ${value.history_subtotal}`
-            }
-            this.items = [...this.items, setItem]
-          })
-          this.text = 'This Month'
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    getDataChart() {
-      axios
-        .get(`http://127.0.0.1:3001/history/chart?date=${this.currentDate}`)
-        .then(response => {
-          const setChart = response.data.data
-          for (let i = 0; i < setChart.length; i++) {
-            this.chartData.push([setChart[i].date, setChart[i].sum])
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
+    // getHistoryToday() {
+    //   this.items = []
+    //   axios
+    //     .get('http://127.0.0.1:3001/history/today')
+    //     .then(response => {
+    //       this.history = response.data.data
+    //       this.history.map(value => {
+    //         const setItem = {
+    //           INVOICES: `#${value.history_invoice}`,
+    //           CASHIER: this.user,
+    //           DATE: value.history_created_at.slice(0, 10),
+    //           ORDERS: value.orders
+    //             .map(item => item.product_name.concat(` ${item.order_qty}`))
+    //             .join(', '),
+    //           AMOUNT: `Rp. ${value.history_subtotal}`
+    //         }
+    //         this.items = [...this.items, setItem]
+    //       })
+    //       this.text = 'Today'
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getiHistoryWeek() {
+    //   this.items = []
+    //   axios
+    //     .get('http://127.0.0.1:3001/history/week')
+    //     .then(response => {
+    //       this.history = response.data.data
+    //       this.history.map(value => {
+    //         const setItem = {
+    //           INVOICES: `#${value.history_invoices}`,
+    //           CASHIER: this.user,
+    //           DATE: value.history_created_at.slice(0, 10),
+    //           ORDERS: value.orders
+    //             .map(item => item.product_name.concat(`${item.order_qty}x`))
+    //             .join(', '),
+    //           AMOUNT: `Rp. ${value.history_subtotal}`
+    //         }
+    //         this.items = [...this.items, setItem]
+    //       })
+    //       this.text = 'This Week'
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getHistoryMonth() {
+    //   this.items = []
+    //   axios
+    //     .get('http://127.0.0.1:3001/history/month')
+    //     .then(response => {
+    //       this.history = response.data.data
+    //       this.history.map(value => {
+    //         const setItem = {
+    //           INVOICES: `#${value.history_invoices}`,
+    //           CASHIER: this.user,
+    //           DATE: value.history_created_at.slice(0, 10),
+    //           ORDERS: value.orders
+    //             .map(item => item.product_name.concat(`${item.order_qty}x`))
+    //             .join(', '),
+    //           AMOUNT: `Rp. ${value.history_subtotal}`
+    //         }
+    //         this.items = [...this.items, setItem]
+    //       })
+    //       this.text = 'This Month'
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getDataChart() {
+    //   axios
+    //     .get(`http://127.0.0.1:3001/history/chart?date=${this.currentDate}`)
+    //     .then(response => {
+    //       const setChart = response.data.data
+    //       for (let i = 0; i < setChart.length; i++) {
+    //         this.chartData.push([setChart[i].date, setChart[i].sum])
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
     getTodayIncome() {
+      const getDate = new Date().toJSON().slice(0, 10)
       axios
-        .get(`http://127.0.0.1:3001/history/income?date=${this.currentDate}`)
+        .get(`http://127.0.0.1:3001/history/income?date=${getDate}`)
         .then(response => {
           this.todayIncome = response.data.data
+          console.log(response)
         })
         .catch(error => {
-          console.log(error)
+          console.log(error.response)
         })
-    },
-    getPrevIncome() {
-      axios
-        .get(`http://127.0.0.1:3001/history/income?date=${this.prevDate}`)
-        .then(response => {
-          this.prevIncome = response.data.data
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    getYearIncome() {
-      axios
-        .get(
-          `http://127.0.0.1:3001/history/incomeyear?date=${this.currentDate}`
-        )
-        .then(response => {
-          this.yearIncome = response.data.data
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    getPrevYearIncome() {
-      axios
-        .get(`http://127.0.0.1:3001/history/incomeyear?date=${this.prevYear}`)
-        .then(response => {
-          this.prevYearIncome = response.data.data
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    getCountHistoryWeek() {
-      axios
-        .get(`http://127.0.0.1:3001/history/count?date=${this.currentDate}`)
-        .then(response => {
-          this.countThisWeek = response.data.data
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    getCountHistoryLastWeek() {
-      axios
-        .get(`http://127.0.0.1:3001/history/count?date=${this.prevWeek}`)
-        .then(response => {
-          this.countPrevWeek = response.data.data
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    profitGrowth() {
-      const count =
-        ((this.todayIncome - this.prevIncome) / this.prevIncome) * 100
-      return Math.ceil(count)
-    },
-    orderGrowth() {
-      const count =
-        ((this.countThisWeek - this.countPrevWeek) / this.countPrevWeek) * 100
-      return Math.ceil(count)
-    },
-    yearGrowth() {
-      const count =
-        ((this.yearIncome - this.prevYearIncome) / this.prevYearIncome) * 100
-      return Math.ceil(count)
-    },
-    chartJan() {
-      this.month = 'January'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 0, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartFeb() {
-      this.month = 'February'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 1, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartMar() {
-      this.month = 'March'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 2, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartApr() {
-      this.month = 'April'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 3, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartMay() {
-      this.month = 'May'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 4, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartJun() {
-      this.month = 'June'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 5, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartJul() {
-      this.month = 'July'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 6, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartAug() {
-      this.month = 'August'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 7, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartSep() {
-      this.month = 'September'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 8, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartOct() {
-      this.month = 'October'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 9, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartNov() {
-      this.month = 'November'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 10, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
-    },
-    chartDec() {
-      this.month = 'December'
-      this.chartData = []
-      this.currentDate = new Date(new Date().getFullYear(), 11, 2)
-        .toJSON()
-        .slice(0, 10)
-      console.log(this.currentDate)
-      this.getDataChart()
     }
+    // getPrevIncome() {
+    //   axios
+    //     .get(`http://127.0.0.1:3001/history/income?date=${this.prevDate}`)
+    //     .then(response => {
+    //       this.prevIncome = response.data.data
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getYearIncome() {
+    //   axios
+    //     .get(
+    //       `http://127.0.0.1:3001/history/incomeyear?date=${this.currentDate}`
+    //     )
+    //     .then(response => {
+    //       this.yearIncome = response.data.data
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getPrevYearIncome() {
+    //   axios
+    //     .get(`http://127.0.0.1:3001/history/incomeyear?date=${this.prevYear}`)
+    //     .then(response => {
+    //       this.prevYearIncome = response.data.data
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getCountHistoryWeek() {
+    //   axios
+    //     .get(`http://127.0.0.1:3001/history/count?date=${this.currentDate}`)
+    //     .then(response => {
+    //       this.countThisWeek = response.data.data
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getCountHistoryLastWeek() {
+    //   axios
+    //     .get(`http://127.0.0.1:3001/history/count?date=${this.prevWeek}`)
+    //     .then(response => {
+    //       this.countPrevWeek = response.data.data
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // profitGrowth() {
+    //   const count =
+    //     ((this.todayIncome - this.prevIncome) / this.prevIncome) * 100
+    //   return Math.ceil(count)
+    // },
+    // orderGrowth() {
+    //   const count =
+    //     ((this.countThisWeek - this.countPrevWeek) / this.countPrevWeek) * 100
+    //   return Math.ceil(count)
+    // },
+    // yearGrowth() {
+    //   const count =
+    //     ((this.yearIncome - this.prevYearIncome) / this.prevYearIncome) * 100
+    //   return Math.ceil(count)
+    // },
+    // chartJan() {
+    //   this.month = 'January'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 0, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartFeb() {
+    //   this.month = 'February'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 1, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartMar() {
+    //   this.month = 'March'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 2, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartApr() {
+    //   this.month = 'April'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 3, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartMay() {
+    //   this.month = 'May'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 4, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartJun() {
+    //   this.month = 'June'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 5, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartJul() {
+    //   this.month = 'July'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 6, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartAug() {
+    //   this.month = 'August'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 7, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartSep() {
+    //   this.month = 'September'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 8, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartOct() {
+    //   this.month = 'October'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 9, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartNov() {
+    //   this.month = 'November'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 10, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // },
+    // chartDec() {
+    //   this.month = 'December'
+    //   this.chartData = []
+    //   this.currentDate = new Date(new Date().getFullYear(), 11, 2)
+    //     .toJSON()
+    //     .slice(0, 10)
+    //   console.log(this.currentDate)
+    //   this.getDataChart()
+    // }
   },
   computed: {
     msg: {
