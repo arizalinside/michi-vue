@@ -7,3 +7,27 @@ form {
 .card {
   margin-top: 15%;
 }
+
+.login-card {
+  background-color: #0b4a0a;
+  color: white;
+  border-radius: 20px;
+}
+
+.login-button {
+  color: white;
+  border: 1px gray solid;
+  background-color: gray;
+}
+
+.signup-card {
+  background-color: #0b4a0a;
+  color: white;
+  border-radius: 20px;
+}
+
+.register-btn {
+  color: white;
+  border: 1px gray solid;
+  background-color: gray;
+}

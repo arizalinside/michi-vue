@@ -1,6 +1,6 @@
 <template>
   <b-form @submit.prevent="onSubmit">
-    <b-card>
+    <b-card class="signup-card">
       <p class="h4 text-center mb-4">Sign up</p>
 
       <label for="defaultFormLoginEmailEx" class="grey-text">Username</label>
@@ -12,10 +12,22 @@
       <br />
 
       <label for="defaultFormLoginPasswordEx" class="grey-text">Password</label>
-      <input type="password" v-model="form.user_password" class="form-control" />
+      <input
+        type="password"
+        v-model="form.user_password"
+        class="form-control"
+      />
       <div class="text-center mt-4">
-        <button class="btn btn-indigo" type="submit" @click="onSubmit">Register</button>
-        <p class="warning text-center mt-2 mb-4" v-show="isError">{{ error() }}</p>
+        <button
+          class="btn btn-indigo register-btn"
+          type="submit"
+          @click="onSubmit"
+        >
+          Register
+        </button>
+        <p class="warning text-center mt-2 mb-4" v-show="isError">
+          {{ error() }}
+        </p>
         <p class="link text-center mt-2 mb-4">
           Already have account?
           <router-link to="/login">
@@ -47,11 +59,11 @@ export default {
     ...mapGetters({ error: 'getError' }),
     onSubmit() {
       this.register(this.form)
-        .then((result) => {
+        .then(result => {
           console.log(result)
           this.$router.push('/login')
         })
-        .catch((error) => {
+        .catch(error => {
           this.isError = true
           console.log(error)
         })

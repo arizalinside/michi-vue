@@ -1,7 +1,7 @@
 <template>
   <b-form @submit.prevent="onSubmit">
-    <b-card>
-      <p class="h4 text-center mb-4">Sign in</p>
+    <b-card class="login-card">
+      <p class="h4 text-center mb-4 sign-in">Sign in</p>
       <label for="defaultFormLoginEmailEx" class="grey-text">Email</label>
       <input type="email" v-model="form.user_email" class="form-control" />
       <br />
@@ -13,7 +13,11 @@
         class="form-control"
       />
       <div class="text-center mt-4">
-        <button class="btn btn-indigo" type="submit" @click="onSubmit">
+        <button
+          class="btn btn-indigo login-button"
+          type="submit"
+          @click="onSubmit"
+        >
           Login
         </button>
         <p class="warning text-center mt-2 mb-4" v-show="isError">
