@@ -11,9 +11,11 @@ export default {
     setUser(state, payload) {
       state.user = payload
       state.token = payload.token
-      // console.log(payload)
+      console.log(payload)
     },
     setError(state, payload) {
+      console.log(state)
+      console.log(payload)
       state.errorLogin = payload
     },
     delUser(state) {
@@ -33,6 +35,7 @@ export default {
             resolve(response.data.msg)
           })
           .catch(error => {
+            console.log(error.response)
             reject(error.response.data.msg)
           })
       })
@@ -57,12 +60,12 @@ export default {
     interceptorRequest(context) {
       console.log('inteceptor worked!')
       axios.interceptors.request.use(
-        function(config) {
+        function (config) {
           config.headers.Authorization = `Bearer ${context.state.token}`
           // Do something before request is sent
           return config
         },
-        function(error) {
+        function (error) {
           // Do something with request error
           return Promise.reject(error)
         }
@@ -70,12 +73,12 @@ export default {
     },
     interceptorResponse(context) {
       axios.interceptors.response.use(
-        function(response) {
+        function (response) {
           // Any status code that lie within the range of 2xx cause this function to trigger
           // Do something with response data
           return response
         },
-        function(error) {
+        function (error) {
           console.log(error)
           if (error.response.status === 403) {
             if (
