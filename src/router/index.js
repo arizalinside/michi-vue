@@ -4,7 +4,6 @@ import Home from '../views/Home.vue'
 import History from '../views/History.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
-import Product from '../views/main/Product.vue'
 import Settings from '../views/Settings.vue'
 import store from '../store'
 
@@ -34,12 +33,6 @@ const routes = [
     name: 'Register',
     component: Register,
     meta: { requiresVisitor: true }
-  },
-  {
-    path: '/product',
-    name: 'Product',
-    component: Product,
-    meta: { requiresAuth: true }
   },
   {
     path: '/settings',
