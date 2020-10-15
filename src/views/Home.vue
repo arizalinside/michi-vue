@@ -49,26 +49,17 @@
                 <b-dropdown-item-button @click="sortNameAsc()"
                   >A-Z</b-dropdown-item-button
                 >
-                <b-dropdown-item-button @click="sortNameDesc()"
-                  >Z-A</b-dropdown-item-button
-                >
               </b-dropdown-group>
               <b-dropdown-divider></b-dropdown-divider>
               <b-dropdown-group id="dropdown-group-2" header="Date">
                 <b-dropdown-item-button @click="sortDateAsc()"
                   >Newest</b-dropdown-item-button
                 >
-                <b-dropdown-item-button @click="sortDateDesc()"
-                  >Oldest</b-dropdown-item-button
-                >
               </b-dropdown-group>
               <b-dropdown-divider></b-dropdown-divider>
               <b-dropdown-group id="dropdown-group-3" header="Price">
                 <b-dropdown-item-button @click="sortPriceAsc()"
                   >Lowest</b-dropdown-item-button
-                >
-                <b-dropdown-item-button @click="sortPriceDesc()"
-                  >Highest</b-dropdown-item-button
                 >
               </b-dropdown-group>
             </b-dropdown>
@@ -198,7 +189,7 @@
                 <span>Tax not included</span>
               </p>
             </b-col>
-            <b-col cols="6" style="text-align: end;">
+            <b-col cols="6" style="text-align: end">
               <p>Rp. {{ countTotal() }}</p>
             </b-col>
             <b-button
@@ -212,7 +203,7 @@
             <b-button
               class="cancel-btn"
               variant="danger"
-              style="background: #F24F8A;"
+              style="background: #f24f8a"
               @click="cancelCart()"
               >Cancel</b-button
             >
@@ -230,16 +221,16 @@
           <b-col cols="6">
             <p>Checkout</p>
           </b-col>
-          <b-col cols="6" style="text-align: end;">
+          <b-col cols="6" style="text-align: end">
             <p>Receipt no: #{{ invoice }}</p>
           </b-col>
         </b-row>
-        <p style="margin-bottom: 50px; font-size: 13px;">Cashier: {{ user }}</p>
+        <p style="margin-bottom: 50px; font-size: 13px">Cashier: {{ user.user_name }}</p>
         <b-row v-for="(item, index) in cart" :key="index" class="checkout-list">
           <b-col cols="6">
             <p>{{ item.product_name }} {{ item.qty }}x</p>
           </b-col>
-          <b-col cols="6" style="text-align: end;">
+          <b-col cols="6" style="text-align: end">
             <p>Rp. {{ item.product_price * item.qty }}</p>
           </b-col>
         </b-row>
@@ -247,10 +238,10 @@
           <b-col cols="6">
             <p>Tax 10%</p>
           </b-col>
-          <b-col cols="6" style="text-align: end;">
+          <b-col cols="6" style="text-align: end">
             <p>Rp. {{ countTotal() * 0.1 }}</p>
           </b-col>
-          <b-col cols="12" style="text-align: end;">
+          <b-col cols="12" style="text-align: end">
             <p>Total: Rp. {{ countTotal() + countTotal() * 0.1 }}</p>
           </b-col>
           <b-col cols="12">
@@ -285,7 +276,6 @@ export default {
   data() {
     return {
       title: 'Michi POS',
-      user: 'Pevita Pearce',
       sortText: 'Sort',
       // totalData: 0,
       // page: 1,
@@ -309,7 +299,7 @@ export default {
   },
   methods: {
     ...mapActions(['getProduct', 'searchProduct']),
-    ...mapMutations(['removeCart, sortProduct, changePage']),
+    ...mapMutations(['removeCart', 'sortProduct', 'changePage']),
     // getProduct() {
     //   axios
     //     .get(
@@ -357,59 +347,23 @@ export default {
       }
     },
     sortCategory() {
-      this.sortText = 'Category'
-      this.sort = 'category_id'
-      this.page = 1
       this.showPagination = true
-      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
+      this.sortProduct('category_id')
       this.getProduct()
     },
     sortNameAsc() {
-      this.sortText = 'Name (A-Z)'
-      this.sort = 'product_name ASC'
-      this.page = 1
       this.showPagination = true
-      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
-      this.getProduct()
-    },
-    sortNameDesc() {
-      this.sortText = 'Name (Z-A)'
-      this.sort = 'product_name DESC'
-      this.page = 1
-      this.showPagination = true
-      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
+      this.sortProduct('product_name')
       this.getProduct()
     },
     sortDateAsc() {
-      this.sortText = 'Date (Newest)'
-      this.sort = 'product_created_at ASC'
-      this.page = 1
       this.showPagination = true
-      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
-      this.getProduct()
-    },
-    sortDateDesc() {
-      this.sortText = 'Date (Oldest)'
-      this.sort = 'product_created_at DESC'
-      this.page = 1
-      this.showPagination = true
-      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
+      this.sortProduct('product_created_at')
       this.getProduct()
     },
     sortPriceAsc() {
-      this.sortText = 'Price (Lowest)'
-      this.sort = 'product_price ASC'
-      this.page = 1
       this.showPagination = true
-      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
-      this.getProduct()
-    },
-    sortPriceDesc() {
-      this.sortText = 'Price (Highest)'
-      this.sort = 'product_price DESC'
-      this.page = 1
-      this.showPagination = true
-      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
+      this.sortProduct('product_price')
       this.getProduct()
     },
     addCart(data) {
@@ -423,12 +377,12 @@ export default {
       this.cart = [...this.cart, setCart]
     },
     checkCart(data) {
-      return this.cart.some(item => item.product_id === data.product_id)
+      return this.cart.some((item) => item.product_id === data.product_id)
     },
     removeCart(data) {
       return this.cart.splice(
         this.cart.splice(
-          this.cart.findIndex(item => item.product_id === data.product_id),
+          this.cart.findIndex((item) => item.product_id === data.product_id),
           1
         )
       )
@@ -444,8 +398,8 @@ export default {
       data.qty += 1
     },
     pageChange(item) {
+      // console.log(item)
       this.changePage(item)
-      this.$router.push(`?ob=${this.sort}&p=${this.page}`)
       this.getProduct()
     },
     cartCount() {
@@ -459,20 +413,24 @@ export default {
       return total
     },
     postOrder(data) {
+      console.log(data)
       for (let i = 0; i < data.length; i++) {
-        const dataOrder = {
+        const orderData = {
           product_id: data[i].product_id,
-          qty: data[i].qty
+          order_qty: data[i].qty
         }
-        this.setOrder = [...this.setOrder, dataOrder]
+        this.setOrder = [...this.setOrder, orderData]
+      }
+      const setData = {
+        orders: this.setOrder
       }
       axios
-        .post('http://127.0.0.1:3001/orders', this.setOrder)
-        .then(response => {
-          this.invoice = response.data.data.invoice
-          console.log(response)
+        .post('http://127.0.0.1:3001/orders', setData)
+        .then((response) => {
+          this.invoice = response.data.data.history_invoices
+          console.log(response.data)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     },
@@ -498,6 +456,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      user: 'getUser',
       product: 'getProduct',
       totalData: 'getTotalData',
       limit: 'getLimit',

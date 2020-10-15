@@ -3,7 +3,12 @@
     <b-card class="login-card">
       <p class="h4 text-center mb-4 sign-in">Sign in</p>
       <label for="defaultFormLoginEmailEx" class="grey-text">Email</label>
-      <input type="email" v-model="form.user_email" class="form-control" />
+      <input
+        type="email"
+        v-model="form.user_email"
+        class="form-control"
+        required
+      />
       <br />
 
       <label for="defaultFormLoginPasswordEx" class="grey-text">Password</label>
@@ -20,9 +25,9 @@
         >
           Login
         </button>
-        <p class="warning text-center mt-2 mb-4" v-show="isError">
-          {{ error() }}
-        </p>
+        <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
+          {{ msgError }}
+        </b-alert>
         <p class="link text-center mt-2 mb-4">
           Not registered?
           <router-link to="/register">
@@ -44,7 +49,9 @@ export default {
       form: {
         user_email: '',
         user_password: ''
-      }
+      },
+      showDismissibleAlert: false,
+      msgError: ''
     }
   },
   computed: {
@@ -59,16 +66,17 @@ export default {
   },
   methods: {
     ...mapActions(['login']),
-    ...mapGetters({ error: 'getError' }),
+    ...mapGetters({ error: 'getError', getUser: 'getUser' }),
     onSubmit() {
       // console.log(this.form)
       this.login(this.form)
-        .then(result => {
+        .then((result) => {
           console.log(result)
           this.$router.push('/')
         })
-        .catch(error => {
-          console.log(error)
+        .catch((error) => {
+          this.showDismissibleAlert = true
+          this.msgError = error
         })
     },
     onReset() {
@@ -76,7 +84,8 @@ export default {
         user_email: '',
         user_password: ''
       }
-    }
+    },
+    error() {}
   }
 }
 </script>
