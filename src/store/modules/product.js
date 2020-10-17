@@ -3,7 +3,7 @@ import axios from 'axios'
 export default {
   state: {
     page: 1,
-    limit: 6,
+    limit: 9,
     totalData: 0,
     product: [],
     sort: 'product_name',
@@ -12,12 +12,12 @@ export default {
   },
   mutations: {
     setProduct(state, payload) {
-      console.log(payload.data)
+      // console.log(payload.data)
       state.product = payload.data
       state.totalData = payload.pagination.totalData
     },
     changePage(state, payload) {
-      console.log(payload)
+      // console.log(payload)
       state.page = payload
     },
     sortProduct(state, payload) {
@@ -29,7 +29,8 @@ export default {
     },
     setProductSetting(state, payload) {
       // console.log(payload)
-      payload.data.map((value) => {
+      state.productItem = []
+      payload.data.map(value => {
         const setProduct = {
           ID: value.product_id,
           Name: value.product_name,
@@ -46,7 +47,7 @@ export default {
         // console.log(this.productItem)
       })
       state.totalData = payload.pagination.totalData
-      // console.log(state.productItem)
+      // console.log(state.totalData)
     }
   },
   actions: {
@@ -87,9 +88,11 @@ export default {
     },
     getProductSetting(context, payload) {
       axios
-        .get(`http://127.0.0.1:3001/product?page=${context.state.page}&limit=${context.state.limit}&sort=product_name`)
+        .get(
+          `http://127.0.0.1:3001/product?page=${context.state.page}&limit=100&sort=product_name`
+        )
         .then(response => {
-          // console.log(response)
+          console.log(response)
           context.commit('setProductSetting', response.data)
         })
         .catch(error => {
@@ -100,12 +103,17 @@ export default {
       console.log(payload)
       return new Promise((resolve, reject) => {
         axios
-          .patch(`http://127.0.0.1:3001/product/${payload.product_id}`, payload.form)
+          .patch(
+            `http://127.0.0.1:3001/product/${payload.product_id}`,
+            payload.form
+          )
           .then(response => {
             console.log(response)
+            resolve(response.data)
           })
           .catch(error => {
-            console.log(error)
+            reject(error.response)
+            // console.log(error)
           })
       })
     }
