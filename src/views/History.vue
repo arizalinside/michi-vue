@@ -102,9 +102,11 @@
         >
           <p style="font-size: 30px;">Recent Order</p>
           <b-dropdown size="sm" :text="text" class="m-2 recent-order-dd">
-            <b-dropdown-item @click="historyToday()">Today</b-dropdown-item>
-            <b-dropdown-item @click="historyWeek()">This week</b-dropdown-item>
-            <b-dropdown-item @click="historyMonth()"
+            <b-dropdown-item @click="getHistoryToday()">Today</b-dropdown-item>
+            <b-dropdown-item @click="getHistoryWeek()"
+              >This week</b-dropdown-item
+            >
+            <b-dropdown-item @click="getHistoryMonth()"
               >This month</b-dropdown-item
             >
           </b-dropdown>
@@ -140,6 +142,7 @@
 import axios from 'axios'
 import Header from '@/components/_base/Header.vue'
 import Sidebar from '@/components/_base/Sidebar.vue'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'History',
@@ -150,14 +153,14 @@ export default {
   data() {
     return {
       title: 'Michi POS',
-      todayIncome: 250000,
+      todayIncome: 0,
       countThisWeek: 2000,
       yearIncome: 100000000,
       profitGrowth: 2,
       orderGrowth: 5,
       yearGrowth: 10,
       month: 'Month',
-      text: 'Today',
+      // text: 'Today',
       fields: [
         { key: 'invoices', label: 'INVOICES', sortable: false },
         { key: 'name', label: 'CASHIER', sortable: true },
@@ -165,11 +168,12 @@ export default {
         { key: 'orders', label: 'ORDERS', sortable: true },
         { key: 'amount', label: 'AMOUNT', sortable: true }
       ],
-      items: [],
-      perPage: 10,
+      // items: [],
+      // perPage: 10,
       currentPage: 1,
       chartData: [],
-      history: []
+      getDate: new Date().toJSON().slice(0, 10)
+      // history: []
       //     title: 'Michi POS',
       //     month: 'Month',
       //     text: 'Today',
@@ -205,7 +209,7 @@ export default {
   created() {
     this.getHistoryToday()
     // this.getDataChart()
-    // this.getTodayIncome()
+    this.getTodayIncome()
     // this.getPrevIncome()
     // this.getYearIncome()
     // this.getPrevYearIncome()
@@ -213,107 +217,116 @@ export default {
     // this.getCountHistoryLastWeek()
   },
   methods: {
-    getHistoryToday() {
-      this.items = []
+    ...mapActions(['getHistoryToday', 'getHistoryWeek', 'getHistoryMonth']),
+    // historyToday() {
+    //   this.getHistoryToday()
+    // },
+    // historyWeek() {
+    //   this.getHistoryWeek()
+    // },
+    // historyMonth() {
+    //   this.get
+    // }
+    // getHistoryToday() {
+    //   this.items = []
+    //   axios
+    //     .get('http://127.0.0.1:3001/history/today')
+    //     .then(response => {
+    //       // console.log(response)
+    //       this.history = response.data.data
+    //       this.history.map(value => {
+    //         // console.log(value)
+    //         const setItem = {
+    //           INVOICES: `#${value.history_invoices}`,
+    //           CASHIER: this.user,
+    //           DATE: value.history_created_at.slice(0, 10),
+    //           ORDERS: value.orders
+    //             .map(item => item.product_name.concat(` ${item.order_qty}x`))
+    //             .join(', '),
+    //           AMOUNT: `Rp. ${value.history_subtotal}`
+    //         }
+    //         this.items = [...this.items, setItem]
+    //       })
+    //       this.text = 'Today'
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // }
+    // getiHistoryWeek() {
+    //   this.items = []
+    //   axios
+    //     .get('http://127.0.0.1:3001/history/week')
+    //     .then(response => {
+    //       this.history = response.data.data
+    //       this.history.map(value => {
+    //         const setItem = {
+    //           INVOICES: `#${value.history_invoices}`,
+    //           CASHIER: this.user,
+    //           DATE: value.history_created_at.slice(0, 10),
+    //           ORDERS: value.orders
+    //             .map(item => item.product_name.concat(`${item.order_qty}x`))
+    //             .join(', '),
+    //           AMOUNT: `Rp. ${value.history_subtotal}`
+    //         }
+    //         this.items = [...this.items, setItem]
+    //       })
+    //       this.text = 'This Week'
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getHistoryMonth() {
+    //   this.items = []
+    //   axios
+    //     .get('http://127.0.0.1:3001/history/month')
+    //     .then(response => {
+    //       this.history = response.data.data
+    //       this.history.map(value => {
+    //         const setItem = {
+    //           INVOICES: `#${value.history_invoices}`,
+    //           CASHIER: this.user,
+    //           DATE: value.history_created_at.slice(0, 10),
+    //           ORDERS: value.orders
+    //             .map(item => item.product_name.concat(`${item.order_qty}x`))
+    //             .join(', '),
+    //           AMOUNT: `Rp. ${value.history_subtotal}`
+    //         }
+    //         this.items = [...this.items, setItem]
+    //       })
+    //       this.text = 'This Month'
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // getDataChart() {
+    //   axios
+    //     .get(`http://127.0.0.1:3001/history/chart?date=${this.currentDate}`)
+    //     .then(response => {
+    //       const setChart = response.data.data
+    //       for (let i = 0; i < setChart.length; i++) {
+    //         this.chartData.push([setChart[i].date, setChart[i].sum])
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    getTodayIncome() {
+      // console.log(getDate)
       axios
-        .get('http://127.0.0.1:3001/history/today')
+        .get(`http://127.0.0.1:3001/history/income?date=${this.getDate}`)
         .then(response => {
+          this.todayIncome = response.data.data
           // console.log(response)
-          this.history = response.data.data
-          this.history.map(value => {
-            // console.log(value)
-            const setItem = {
-              INVOICES: `#${value.history_invoices}`,
-              CASHIER: this.user,
-              DATE: value.history_created_at.slice(0, 10),
-              ORDERS: value.orders
-                .map(item => item.product_name.concat(` ${item.order_qty}x`))
-                .join(', '),
-              AMOUNT: `Rp. ${value.history_subtotal}`
-            }
-            this.items = [...this.items, setItem]
-          })
-          this.text = 'Today'
         })
         .catch(error => {
           console.log(error)
         })
-    },
-    historyToday() {}
+    }
   },
-  // getiHistoryWeek() {
-  //   this.items = []
-  //   axios
-  //     .get('http://127.0.0.1:3001/history/week')
-  //     .then(response => {
-  //       this.history = response.data.data
-  //       this.history.map(value => {
-  //         const setItem = {
-  //           INVOICES: `#${value.history_invoices}`,
-  //           CASHIER: this.user,
-  //           DATE: value.history_created_at.slice(0, 10),
-  //           ORDERS: value.orders
-  //             .map(item => item.product_name.concat(`${item.order_qty}x`))
-  //             .join(', '),
-  //           AMOUNT: `Rp. ${value.history_subtotal}`
-  //         }
-  //         this.items = [...this.items, setItem]
-  //       })
-  //       this.text = 'This Week'
-  //     })
-  //     .catch(error => {
-  //       console.log(error)
-  //     })
-  // },
-  // getHistoryMonth() {
-  //   this.items = []
-  //   axios
-  //     .get('http://127.0.0.1:3001/history/month')
-  //     .then(response => {
-  //       this.history = response.data.data
-  //       this.history.map(value => {
-  //         const setItem = {
-  //           INVOICES: `#${value.history_invoices}`,
-  //           CASHIER: this.user,
-  //           DATE: value.history_created_at.slice(0, 10),
-  //           ORDERS: value.orders
-  //             .map(item => item.product_name.concat(`${item.order_qty}x`))
-  //             .join(', '),
-  //           AMOUNT: `Rp. ${value.history_subtotal}`
-  //         }
-  //         this.items = [...this.items, setItem]
-  //       })
-  //       this.text = 'This Month'
-  //     })
-  //     .catch(error => {
-  //       console.log(error)
-  //     })
-  // },
-  // getDataChart() {
-  //   axios
-  //     .get(`http://127.0.0.1:3001/history/chart?date=${this.currentDate}`)
-  //     .then(response => {
-  //       const setChart = response.data.data
-  //       for (let i = 0; i < setChart.length; i++) {
-  //         this.chartData.push([setChart[i].date, setChart[i].sum])
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.log(error)
-  //     })
-  // },
-  // getTodayIncome() {
-  //   const getDate = new Date().toJSON().slice(0, 10)
-  //   axios
-  //     .get(`http://127.0.0.1:3001/history/income?date=${getDate}`)
-  //     .then(response => {
-  //       this.todayIncome = response.data.data
-  //       console.log(response)
-  //     })
-  //     .catch(error => {
-  //       console.log(error.response)
-  //     })
-  // }
   // getPrevIncome() {
   //   axios
   //     .get(`http://127.0.0.1:3001/history/income?date=${this.prevDate}`)
@@ -491,6 +504,13 @@ export default {
   // }
   // },
   computed: {
+    ...mapGetters({
+      items: 'items',
+      history: 'history',
+      perPage: 'perPage',
+      text: 'getText'
+      // currentPage: 'currentPage'
+    }),
     msg: {
       get() {
         return this.title
