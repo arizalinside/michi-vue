@@ -160,13 +160,16 @@
           label="Status"
           label-for="nested-product"
         >
-          <b-form-select v-model="form.product_status" :options="options" id="nested-product">
+          <b-form-select
+            v-model="form.product_status"
+            :options="options"
+            id="nested-product"
+          >
           </b-form-select>
         </b-form-group>
 
         <b-form-group label-cols-sm="3" label="Image" label-for="nested-image">
-          <b-form-file id="nested-image" @change="uploadFile">
-          </b-form-file>
+          <b-form-file id="nested-image" @change="uploadFile"> </b-form-file>
           <br />
           <span style="color: grey">(Max. 2MB)</span>
         </b-form-group>
@@ -175,7 +178,7 @@
           >Submit</b-button
         >
         <b-button
-          type="submit"
+          type="button"
           variant="primary"
           v-show="isUpdate"
           @click.prevent="updateProduct()"
@@ -184,8 +187,8 @@
       </b-form>
     </b-modal>
 
-    <b-modal id="modal-2" :title="modalTitle" hide-footer>
-      <b-form @submit="addCategory">
+    <b-modal id="modal-2" :title="modalTitle" hide-footer v-if="showModal">
+      <b-form @submit.prevent="addCategory" v-model="showModal">
         <b-form-group label-cols-sm="3" label="Name" label-for="nested-name">
           <b-form-input
             id="nested-name"
@@ -200,7 +203,7 @@
           type="button"
           variant="primary"
           v-show="isUpdate"
-          @click="patchCategory()"
+          @click.prevent="patchCategory()"
           >Update</b-button
         >
       </b-form>
@@ -274,22 +277,23 @@ export default {
       ],
       fieldsCategory: [
         // { key: 'category_id', label: 'ID' },
+        { key: 'ID', label: 'ID' },
         { key: 'Name', label: 'Name' },
         { key: 'Created', label: 'Created' },
         { key: 'Updated', label: 'Updated' },
         { key: 'Actions', label: 'Actions' }
       ],
       filter: null,
-      product: [],
-      category: [],
+      // product: [],
+      // category: [],
       // productItem: [],
-      categoryItem: [],
+      // categoryItem: [],
       // productId: null,
-      categoryId: null,
+      // categoryId: null,
       isUpdate: false,
       page: 1,
-      totalData: 0,
-      limit: 50,
+      // totalData: 0,
+      // limit: 50,
       options: [
         { value: 0, text: 'Not Available' },
         { value: 1, text: 'Available' }
@@ -298,59 +302,36 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getProductSetting', 'addProducts', 'patchProduct']),
-    // getProduct() {
+    ...mapActions([
+      'getProductSetting',
+      'addProducts',
+      'patchProduct',
+      'getCategories',
+      'addCategories',
+      'deleteCategory'
+    ]),
+    // getCategory() {
     //   axios
-    //     .get(
-    //       `http://127.0.0.1:3001/product?page=${this.page}&limit=${this.limit}&sort=product_name`
-    //     )
+    //     .get('http://127.0.0.1:3001/category')
     //     .then((response) => {
+    //       // console.log(this.category)
     //       // console.log(response.data.data)
-    //       this.product = response.data.data
-    //       this.product.map((value) => {
-    //         // console.log(value)
-    //         const setProduct = {
-    //           ID: value.product_id,
-    //           Name: value.product_name,
-    //           Image: value.product_image,
-    //           Price: `Rp. ${value.product_price}`,
-    //           price: value.product_price,
-    //           // category_id: value.category_id,
-    //           Category: value.category_id,
-    //           Created: value.product_created_at.slice(0, 10),
-    //           Updated: value.product_updated_at.slice(0, 10)
-    //         }
-    //         // console.log(setProduct)
-    //         this.productItem = [...this.productItem, setProduct]
-    //         // console.log(this.productItem)
-    //         this.totalData = response.data.pagination.totalData
-    //       })
+    //       this.category = response.data.data
+    //       this.category.map((value) => {
+    //   const setCategory = {
+    //     ID: value.category_id,
+    //     Name: value.category_name,
+    //     Created: value.category_created_at.slice(0, 10),
+    //     Updated: value.category_updated_at.slice(0, 10)
+    //   }
+    //   this.categoryItem = [...this.categoryItem, setCategory]
+    // })
+    //       // console.log(this.categoryItem)
     //     })
     //     .catch((error) => {
     //       console.log(error)
     //     })
     // },
-    getCategory() {
-      axios
-        .get('http://127.0.0.1:3001/category')
-        .then((response) => {
-          // console.log(this.category)
-          // console.log(response.data.data)
-          this.category = response.data.data
-          this.category.map((value) => {
-            const setCategory = {
-              Name: value.category_name,
-              Created: value.category_created_at.slice(0, 10),
-              Updated: value.category_updated_at.slice(0, 10)
-            }
-            this.categoryItem = [...this.categoryItem, setCategory]
-          })
-          // console.log(this.categoryItem)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
     addButton() {
       this.form = {
         category_id: '',
@@ -377,7 +358,7 @@ export default {
       data.append('product_status', this.form.product_status)
       data.append('product_image', this.form.product_image)
       this.addProducts(data)
-        .then((response) => {
+        .then(response => {
           this.$bvToast.toast(`${response.msg}`, {
             title: 'Notification',
             variant: 'success',
@@ -386,7 +367,7 @@ export default {
           this.getProductSetting()
           this.showModal = false
         })
-        .catch((error) => {
+        .catch(error => {
           this.$bvToast.toast(`${error.data.msg}`, {
             title: 'Notification',
             variant: 'danger',
@@ -395,6 +376,7 @@ export default {
         })
     },
     setProduct(data) {
+      // console.log(data)
       this.modalTitle = 'Edit Product'
       this.form = {
         product_name: data.item.Name,
@@ -404,18 +386,44 @@ export default {
         product_image: data.item.Image
       }
       this.isUpdate = true
-      this.productId = data.product_id
+      this.productId = data.item.ID
     },
     uploadFile(event) {
       this.form.product_image = event.target.files[0]
     },
+    addCategory() {
+      // console.log(this.formCategory.category_name)
+      // const data = new FormData()
+      // data.append('category_name', this.formCategory.category_name)
+      this.addCategories(this.formCategory)
+        // this.showModal = false
+        .then(response => {
+          // console.log(response)
+          this.$bvToast.toast(`${response.msg}`, {
+            title: 'Notification',
+            variant: 'success',
+            solid: true
+          })
+          this.getCategories()
+          this.showModal = false
+        })
+        .catch(error => {
+          console.log(error)
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
+        })
+    },
     setCategory(data) {
+      console.log(data)
       this.isUpdate = true
       this.modalTitle = 'Edit Category'
       this.formCategory = {
-        category_name: data.category_name
+        category_name: data.item.Name
       }
-      this.categoryId = data.category_id
+      this.categoryId = data.item.ID
     },
     updateProduct() {
       const data = new FormData()
@@ -428,8 +436,9 @@ export default {
         product_id: this.productId,
         form: data
       }
-      this.patchProduct(setData)
       this.isUpdate = false
+      this.patchProduct(setData)
+      this.showModal = false
     },
     patchCategory() {
       axios
@@ -437,11 +446,12 @@ export default {
           `http://127.0.0.1:3001/category/${this.categoryId}`,
           this.formCategory
         )
-        .then((response) => {
-          this.isUpdate = false
+        .then(response => {
           location.reload()
+          this.isUpdate = false
+          this.showModal = false
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error)
         })
     },
@@ -458,37 +468,36 @@ export default {
           hideHeaderClose: false,
           centered: true
         })
-        .then((value) => {
+        .then(value => {
           if (value === true) {
             this.deleteProduct(data)
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error)
         })
     },
     showDelBoxCat(data) {
+      // this.deleteCategory(data)
       this.$bvModal
-        .msgBoxConfirm(
-          `Are you sure want to delete ${data.item.category_name} ?`,
-          {
-            title: 'Delete Category',
-            size: 'sm',
-            buttonSize: 'sm',
-            okVariant: 'danger',
-            okTitle: 'YES',
-            cancelTitle: 'NO',
-            footerClass: 'p-2',
-            hideHeaderClose: false,
-            centered: true
-          }
-        )
-        .then((value) => {
+        .msgBoxConfirm(`Are you sure want to delete ${data.item.Name} ?`, {
+          title: 'Delete Category',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'YES',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then(value => {
           if (value === true) {
             this.deleteCategory(data)
+            this.getCategories()
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error)
         })
     },
@@ -496,43 +505,39 @@ export default {
       this.productId = data.item.ID
       axios
         .delete(`http://127.0.0.1:3001/product/${this.productId}`)
-        .then((response) => {
+        .then(response => {
           location.reload()
         })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    deleteCategory(data) {
-      this.categoryId = data.item.category_id
-      axios
-        .delete(`http://127.0.0.1:3001/category/${this.categoryId}`)
-        .then((response) => {
-          location.reload()
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    addCategory() {
-      axios
-        .post('http://127.0.0.1:3001/category', this.formCategory)
-        .then((response) => {
-          // console.log(response)
-          this.getCategory()
-        })
-        .catch((error) => {
+        .catch(error => {
           console.log(error)
         })
     }
+    // deleteCategory(data) {
+    //   console.log(data)
+    // this.categoryId = data.item.category_id
+    // axios
+    //   .delete(`http://127.0.0.1:3001/category/${this.categoryId}`)
+    //   .then((response) => {
+    //     location.reload()
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //   })
+    // },
   },
   created() {
     this.getProductSetting()
-    this.getCategory()
+    this.getCategories()
   },
   computed: {
     ...mapGetters({
-      productItem: 'getProductSetting'
+      productItem: 'getProductSetting',
+      categoryItem: 'getCategoryItem',
+      category: 'getCategory',
+      categoryId: 'getCategoryId',
+      totalData: 'getTotalData',
+      limit: 'getLimit',
+      product: 'getProduct'
     }),
     msg: {
       get() {
