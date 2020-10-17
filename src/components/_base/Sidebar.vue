@@ -36,8 +36,8 @@
         <p class="text-sidebar">Settings</p>
       </b-navbar-brand>
     </b-navbar>
-    <b-navbar variant="faded" type="light">
-      <b-navbar-brand class="mb-1" @click.prevent="isLogout">
+    <b-navbar variant="faded" type="light" style="cursor: pointer">
+      <b-navbar-brand class="mb-1" @click.prevent="isLogout()">
         <img
           src="@/assets/images/icons/exit.png"
           class="d-inline-block align-top"
@@ -60,7 +60,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['logout']),
+    ...mapActions(['getProduct', 'logout']),
     // isLogout() {
     //   this.logout()
     // }
@@ -76,9 +76,10 @@ export default {
         hideHeaderClose: false,
         centered: true
       }).then((value) => {
+        // console.log(value)
         // console.log('ok berhasil')
-        this.isLogout = value
-        this.isLogout ? this.logout() : console.log(this.isLogout)
+        // this.isLogout = value
+        value ? this.logout() : this.getProduct()
       }).catch(error => {
         console.log(error)
         // An error occurred

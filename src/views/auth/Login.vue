@@ -2,6 +2,9 @@
   <b-form @submit.prevent="onSubmit">
     <b-card class="login-card">
       <p class="h4 text-center mb-4 sign-in">Sign in</p>
+      <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
+          {{ msgError }}
+        </b-alert>
       <label for="defaultFormLoginEmailEx" class="grey-text">Email</label>
       <input
         type="email"
@@ -25,9 +28,6 @@
         >
           Login
         </button>
-        <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
-          {{ msgError }}
-        </b-alert>
         <p class="link text-center mt-2 mb-4">
           Not registered?
           <router-link to="/register">
@@ -71,7 +71,12 @@ export default {
       // console.log(this.form)
       this.login(this.form)
         .then((result) => {
-          console.log(result)
+          // console.log(result)
+          this.$bvToast.toast(`${result.msg}`, {
+            title: 'Congratulations!',
+            variant: 'success',
+            solid: true
+          })
           this.$router.push('/')
         })
         .catch((error) => {

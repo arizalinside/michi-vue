@@ -2,7 +2,9 @@
   <b-form @submit.prevent="onSubmit">
     <b-card class="signup-card">
       <p class="h4 text-center mb-4">Sign up</p>
-
+      <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
+          {{ msgError }}
+        </b-alert>
       <label for="defaultFormLoginEmailEx" class="grey-text">Username</label>
       <input type="text" v-model="form.user_name" class="form-control" />
       <br />
@@ -51,7 +53,9 @@ export default {
         user_email: '',
         user_password: ''
       },
-      isError: false
+      isError: false,
+      showDismissibleAlert: false,
+      msgError: ''
     }
   },
   methods: {
@@ -60,10 +64,17 @@ export default {
     onSubmit() {
       this.register(this.form)
         .then(result => {
-          console.log(result)
+          // console.log(result)
+          this.$bvToast.toast(`${result.msg}`, {
+            title: 'Congratulations!',
+            variant: 'success',
+            solid: true
+          })
           this.$router.push('/login')
         })
         .catch(error => {
+          this.msgError = error.data.msg
+          this.showDismissibleAlert = true
           this.isError = true
           console.log(error)
         })
