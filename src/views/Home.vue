@@ -24,47 +24,52 @@
       </b-sidebar>
       <b-row>
         <b-col cols="12" lg="8" class="menu-side">
-          <b-form v-on:submit.prevent="search" inline>
-            <b-input
-              placeholder="Search.."
-              v-model="keyword"
-              class="search-item"
-            ></b-input>
-            <b-button variant="info" type="submit" class="ml-md-2"
-              >Search</b-button
-            >
-
-            <b-dropdown
-              id="sort"
-              :text="sortText"
-              class="m-2 sort-btn"
-              variant="info"
-              v-show="!isSearch"
-            >
-              <b-dropdown-item-button @click="sortCategory()" active
-                >Category</b-dropdown-item-button
+          <b-row class="sort-search">
+            <b-form v-on:submit.prevent="search" inline>
+              <b-input
+                placeholder="Search.."
+                v-model="keyword"
+                class="search-item"
+              ></b-input>
+              <b-button
+                variant="info"
+                type="submit"
+                class="search-button ml-md-2"
+                >Search</b-button
               >
-              <b-dropdown-divider></b-dropdown-divider>
-              <b-dropdown-group id="dropdown-group-1" header="Name">
-                <b-dropdown-item-button @click="sortNameAsc()"
-                  >A-Z</b-dropdown-item-button
+
+              <b-dropdown
+                id="sort"
+                :text="sortText"
+                class="m-2"
+                variant="info"
+                v-show="!isSearch"
+              >
+                <b-dropdown-item-button @click="sortCategory()" active
+                  >Category</b-dropdown-item-button
                 >
-              </b-dropdown-group>
-              <b-dropdown-divider></b-dropdown-divider>
-              <b-dropdown-group id="dropdown-group-2" header="Date">
-                <b-dropdown-item-button @click="sortDateAsc()"
-                  >Newest</b-dropdown-item-button
-                >
-              </b-dropdown-group>
-              <b-dropdown-divider></b-dropdown-divider>
-              <b-dropdown-group id="dropdown-group-3" header="Price">
-                <b-dropdown-item-button @click="sortPriceAsc()"
-                  >Lowest</b-dropdown-item-button
-                >
-              </b-dropdown-group>
-            </b-dropdown>
-          </b-form>
-          <b-row>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-group id="dropdown-group-1" header="Name">
+                  <b-dropdown-item-button @click="sortNameAsc()"
+                    >A-Z</b-dropdown-item-button
+                  >
+                </b-dropdown-group>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-group id="dropdown-group-2" header="Date">
+                  <b-dropdown-item-button @click="sortDateAsc()"
+                    >Newest</b-dropdown-item-button
+                  >
+                </b-dropdown-group>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-group id="dropdown-group-3" header="Price">
+                  <b-dropdown-item-button @click="sortPriceAsc()"
+                    >Lowest</b-dropdown-item-button
+                  >
+                </b-dropdown-group>
+              </b-dropdown>
+            </b-form>
+          </b-row>
+          <b-row class="product-menu">
             <b-col
               cols="12"
               lg="4"
@@ -123,7 +128,8 @@
                 <!-- </div> -->
               </b-card>
             </b-col>
-
+          </b-row>
+          <b-row class="pagination-row">
             <div class="mt-3 item-pagination">
               <b-pagination
                 v-model="currentPage"
@@ -225,7 +231,9 @@
             <p>Receipt no: #{{ invoice }}</p>
           </b-col>
         </b-row>
-        <p style="margin-bottom: 50px; font-size: 13px">Cashier: {{ user.user_name }}</p>
+        <p style="margin-bottom: 50px; font-size: 13px">
+          Cashier: {{ user.user_name }}
+        </p>
         <b-row v-for="(item, index) in cart" :key="index" class="checkout-list">
           <b-col cols="6">
             <p>{{ item.product_name }} {{ item.qty }}x</p>
@@ -377,17 +385,16 @@ export default {
       this.cart = [...this.cart, setCart]
     },
     checkCart(data) {
-      return this.cart.some((item) => item.product_id === data.product_id)
+      return this.cart.some(item => item.product_id === data.product_id)
     },
     removeCart(data) {
       return this.cart.splice(
-        this.cart.splice(
-          this.cart.findIndex((item) => item.product_id === data.product_id),
-          1
-        )
+        this.cart.findIndex(item => item.product_id === data.product_id),
+        1
       )
     },
     minus(data) {
+      console.log(data)
       if (data.qty === 1) {
         this.removeCart(data)
       } else {
@@ -426,11 +433,11 @@ export default {
       }
       axios
         .post('http://127.0.0.1:3001/orders', setData)
-        .then((response) => {
+        .then(response => {
           this.invoice = response.data.data.history_invoices
           console.log(response.data)
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error)
         })
     },
