@@ -132,7 +132,6 @@ export default {
       return state.totalData
     },
     getPage(state) {
-      console.log(state)
       return state.page
     },
     getProductSetting(state) {
