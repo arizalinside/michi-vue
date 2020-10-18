@@ -71,7 +71,7 @@ export default {
       // console.log(this.form)
       this.login(this.form)
         .then((result) => {
-          // console.log(result)
+          console.log(result)
           this.$bvToast.toast(`${result.msg}`, {
             title: 'Congratulations!',
             variant: 'success',
