@@ -1,6 +1,6 @@
 <h1 align='center'>Vue JS - Michi</h1>
   <p align="center">
-    <a href="#">View Demo</a>
+    <a href="https://michi.netlify.app/">View Demo</a>
     ·
     <a href="https://github.com/arizalinside/michi-vue/issues">Report Bug</a>
     ·
