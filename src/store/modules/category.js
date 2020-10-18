@@ -20,13 +20,14 @@ export default {
         state.categoryItem = [...state.categoryItem, setCategory]
         // console.log(value)
       })
+      console.log(state.categoryItem)
     }
   },
   actions: {
     getCategories(context, payload) {
       axios.get('http://127.0.0.1:3001/category')
         .then((response) => {
-          // console.log(response.data)
+          console.log(response.data)
           context.commit('setCategory', response.data)
         })
         .catch((error) => {

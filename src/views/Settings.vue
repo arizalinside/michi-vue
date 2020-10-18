@@ -123,7 +123,7 @@
       </b-col>
     </b-row>
 
-    <b-modal id="modal-1" :title="modalTitle" hide-footer v-if="showModal">
+    <b-modal id="modal-1" :title="modalTitle" hide-footer v-model="showModal">
       <b-form v-on:submit.prevent="addProduct">
         <b-form-group label-cols-sm="3" label="Name" label-for="nested-name">
           <b-form-input
@@ -146,11 +146,11 @@
         >
           <b-form-select v-model="form.category_id" id="nested-category">
             <option
-              v-for="(selectOption, indexOpt) in category"
+              v-for="(selectOption, indexOpt) in categoryItem"
               :key="indexOpt"
-              :value="selectOption.category_id"
+              :value="selectOption.ID"
             >
-              {{ selectOption.category_name }}
+              {{ selectOption.Name }}
             </option>
           </b-form-select>
         </b-form-group>
@@ -187,7 +187,7 @@
       </b-form>
     </b-modal>
 
-    <b-modal id="modal-2" :title="modalTitle" hide-footer v-if="showModal">
+    <b-modal id="modal-2" :title="modalTitle" hide-footer v-if="!showModal">
       <b-form @submit.prevent="addCategory" v-model="showModal">
         <b-form-group label-cols-sm="3" label="Name" label-for="nested-name">
           <b-form-input
@@ -298,7 +298,7 @@ export default {
         { value: 0, text: 'Not Available' },
         { value: 1, text: 'Available' }
       ],
-      showModal: true
+      showModal: false
     }
   },
   methods: {
@@ -333,6 +333,7 @@ export default {
     //     })
     // },
     addButton() {
+      this.showModal = true
       this.form = {
         category_id: '',
         product_name: '',
@@ -438,7 +439,22 @@ export default {
       }
       this.isUpdate = false
       this.patchProduct(setData)
-      this.showModal = false
+        .then(response => {
+          this.$bvToast.toast(`${response.msg}`, {
+            title: 'Notification',
+            variant: 'success',
+            solid: true
+          })
+          this.getProductSetting()
+          this.showModal = false
+        })
+        .catch(error => {
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
+        })
     },
     patchCategory() {
       axios
