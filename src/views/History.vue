@@ -306,14 +306,19 @@ export default {
       axios
         .get(`${process.env.VUE_APP_URL}/history/chart?date=${this.currentDate}`)
         .then(response => {
-          console.log(response)
+          // console.log(response)
           const setChart = response.data.data
           for (let i = 0; i < setChart.length; i++) {
             this.chartData.push([setChart[i].date, setChart[i].sum])
           }
         })
         .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
+          // console.log(error)
         })
     },
     getTodayIncome() {
@@ -325,7 +330,11 @@ export default {
           // console.log(response)
         })
         .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
         })
     },
     // getPrevIncome() {
@@ -346,11 +355,15 @@ export default {
       axios
         .get(`${process.env.VUE_APP_URL}/history/incomeyear`)
         .then(response => {
-          console.log(response.data.data)
+          // console.log(response.data.data)
           this.yearIncome = response.data.data
         })
         .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
         })
     },
     // getPrevYearIncome() {
@@ -371,7 +384,12 @@ export default {
           this.countThisWeek = response.data.data
         })
         .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
+          // console.log(error)
         })
     },
     // getCountHistoryLastWeek() {
@@ -404,7 +422,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 0, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartFeb() {
@@ -413,7 +430,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 1, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartMar() {
@@ -422,7 +438,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 2, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartApr() {
@@ -431,7 +446,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 3, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartMay() {
@@ -440,7 +454,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 4, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartJun() {
@@ -449,7 +462,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 5, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartJul() {
@@ -458,7 +470,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 6, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartAug() {
@@ -467,7 +478,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 7, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartSep() {
@@ -476,7 +486,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 8, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartOct() {
@@ -485,7 +494,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 9, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartNov() {
@@ -494,7 +502,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 10, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     },
     chartDec() {
@@ -503,7 +510,6 @@ export default {
       this.currentDate = new Date(new Date().getFullYear(), 11, 2)
         .toJSON()
         .slice(0, 10)
-      console.log(this.currentDate)
       this.getDataChart()
     }
   },

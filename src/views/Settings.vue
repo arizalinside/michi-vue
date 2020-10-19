@@ -55,14 +55,14 @@
                       class="mr-1"
                       variant="info"
                       v-b-modal.modal-1
-                      @click="setProduct(data)"
+                      @click.prevent="setProduct(data)"
                       >Edit</b-button
                     >
                     <b-button
                       class="ml-1"
                       v-b-modal.modal-3
                       style="background: #d34d4d"
-                      @click="showDelBoxProd(data)"
+                      @click.prevent="showDelBoxProd(data)"
                       >Delete</b-button
                     >
                   </template>
@@ -409,7 +409,6 @@ export default {
           this.showModal = false
         })
         .catch(error => {
-          console.log(error)
           this.$bvToast.toast(`${error.data.msg}`, {
             title: 'Notification',
             variant: 'danger',
@@ -418,7 +417,6 @@ export default {
         })
     },
     setCategory(data) {
-      console.log(data)
       this.isUpdate = true
       this.modalTitle = 'Edit Category'
       this.formCategory = {
@@ -459,16 +457,21 @@ export default {
     patchCategory() {
       axios
         .patch(
-          `http://127.0.0.1:3001/category/${this.categoryId}`,
+          `${process.env.VUE_APP_URL}/category/${this.categoryId}`,
           this.formCategory
         )
         .then(response => {
-          location.reload()
+          // location.reload()
+          this.getCategories()
           this.isUpdate = false
           this.showModal = false
         })
         .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
         })
     },
     showDelBoxProd(data) {
@@ -487,10 +490,17 @@ export default {
         .then(value => {
           if (value === true) {
             this.deleteProduct(data)
+            this.getProductSetting()
+          } else {
+            this.getProductSetting()
           }
         })
         .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
         })
     },
     showDelBoxCat(data) {
