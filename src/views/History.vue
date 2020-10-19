@@ -39,7 +39,7 @@
                 <div class="article-container">
                   <p>Orders</p>
                   <h3>
-                    {{ countThisWeek }}
+                    {{ countThisWeek.toLocaleString().replace(/,/g, '.') }}
                   </h3>
                   <p>+{{ orderGrowth }}% Last Week</p>
                   <!-- <p v-else-if="countThisWeek < countPrevWeek">
@@ -304,7 +304,7 @@ export default {
     // },
     getDataChart() {
       axios
-        .get(`http://127.0.0.1:3001/history/chart?date=${this.currentDate}`)
+        .get(`${process.env.VUE_APP_URL}/history/chart?date=${this.currentDate}`)
         .then(response => {
           console.log(response)
           const setChart = response.data.data
@@ -319,7 +319,7 @@ export default {
     getTodayIncome() {
       // console.log(getDate)
       axios
-        .get(`http://127.0.0.1:3001/history/income?date=${this.getDate}`)
+        .get(`${process.env.VUE_APP_URL}/history/income`)
         .then(response => {
           this.todayIncome = response.data.data
           // console.log(response)
@@ -344,7 +344,7 @@ export default {
     // },
     getYearIncome() {
       axios
-        .get('http://127.0.0.1:3001/history/incomeyear')
+        .get(`${process.env.VUE_APP_URL}/history/incomeyear`)
         .then(response => {
           console.log(response.data.data)
           this.yearIncome = response.data.data
@@ -365,7 +365,7 @@ export default {
     // },
     getCountHistoryWeek() {
       axios
-        .get('http://127.0.0.1:3001/history/count')
+        .get(`${process.env.VUE_APP_URL}/history/count`)
         .then(response => {
           // console.log(response.data.data)
           this.countThisWeek = response.data.data
