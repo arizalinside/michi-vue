@@ -54,7 +54,7 @@ export default {
     getProduct(context) {
       axios
         .get(
-          `http://127.0.0.1:3001/product?page=${context.state.page}&limit=${context.state.limit}&sort=${context.state.sort}`
+          `${process.env.VUE_APP_URL}/product?page=${context.state.page}&limit=${context.state.limit}&sort=${context.state.sort}`
         )
         .then(response => {
           context.commit('setProduct', response.data)
@@ -66,7 +66,7 @@ export default {
     addProducts(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:3001/product', payload)
+          .post(`${process.env.VUE_APP_URL}/product`, payload)
           .then(response => {
             // console.log(response)
             resolve(response.data)
@@ -78,7 +78,7 @@ export default {
     },
     searchProduct(context, payload) {
       axios
-        .get(`http://127.0.0.1:3001/product/search?keyword=${payload}`)
+        .get(`${process.env.VUE_APP_URL}/product/search?keyword=${payload}`)
         .then(response => {
           context.commit('setSearchResult', response.data.data.searchResult)
         })
@@ -89,7 +89,7 @@ export default {
     getProductSetting(context, payload) {
       axios
         .get(
-          `http://127.0.0.1:3001/product?page=${context.state.page}&limit=100&sort=product_name`
+          `${process.env.VUE_APP_URL}/product?page=${context.state.page}&limit=100&sort=product_name`
         )
         .then(response => {
           console.log(response)
@@ -104,7 +104,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .patch(
-            `http://127.0.0.1:3001/product/${payload.product_id}`,
+            `${process.env.VUE_APP_URL}/product/${payload.product_id}`,
             payload.form
           )
           .then(response => {

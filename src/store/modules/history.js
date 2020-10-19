@@ -60,7 +60,7 @@ export default {
   actions: {
     getHistoryToday(context) {
       axios
-        .get('http://127.0.0.1:3001/history/today')
+        .get(`${process.env.VUE_APP_URL}/history/today`)
         .then(response => {
           context.commit('setHistoryToday', response.data)
         })
@@ -70,7 +70,7 @@ export default {
     },
     getHistoryWeek(context) {
       axios
-        .get('http://127.0.0.1:3001/history/week')
+        .get(`${process.env.VUE_APP_URL}/history/week`)
         .then(response => {
           context.commit('setHistoryWeek', response.data)
         })
@@ -80,7 +80,7 @@ export default {
     },
     getHistoryMonth(context) {
       axios
-        .get('http://127.0.0.1:3001/history/month')
+        .get(`${process.env.VUE_APP_URL}/history/month`)
         .then(response => {
           context.commit('setHistoryMonth', response.data)
         })

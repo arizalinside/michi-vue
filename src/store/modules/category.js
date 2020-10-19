@@ -25,7 +25,7 @@ export default {
   },
   actions: {
     getCategories(context, payload) {
-      axios.get('http://127.0.0.1:3001/category')
+      axios.get(`${process.env.VUE_APP_URL}/category`)
         .then((response) => {
           console.log(response.data)
           context.commit('setCategory', response.data)
@@ -38,7 +38,7 @@ export default {
       // console.log(payload)
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:3001/category', payload)
+          .post(`${process.env.VUE_APP_URL}/category`, payload)
           .then((response) => {
             // console.log(response)
             resolve(response.data)
@@ -52,7 +52,7 @@ export default {
       // console.log(payload)
       context.state.categoryId = payload.item.ID
       axios
-        .delete(`http://127.0.0.1:3001/category/${context.state.categoryId}`)
+        .delete(`${process.env.VUE_APP_URL}/category/${context.state.categoryId}`)
         .then((response) => {
           console.log(response)
         })
