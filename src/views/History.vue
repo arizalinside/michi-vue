@@ -330,36 +330,21 @@ export default {
           // console.log(response)
         })
         .catch(error => {
-          this.$bvToast.toast(`${error.data.msg}`, {
+          this.$bvToast.toast(`${error.response.data.msg}`, {
             title: 'Notification',
             variant: 'danger',
             solid: true
           })
         })
     },
-    // getPrevIncome() {
-    // const prevDate = new Date(Date.now - 864e5).toJSON().slice(0, 10)
-    //   const d = new Date()
-    //   d.setDate(d.getDate() - 1)
-    //   axios
-    //     .get(`http://127.0.0.1:3001/history/income?date=${d}`)
-    //     .then(response => {
-    //       console.log(response)
-    //       // this.prevIncome = response.data.data
-    //     })
-    //     .catch(error => {
-    //       console.log(error)
-    //     })
-    // },
     getYearIncome() {
       axios
         .get(`${process.env.VUE_APP_URL}/history/incomeyear`)
         .then(response => {
-          // console.log(response.data.data)
           this.yearIncome = response.data.data
         })
         .catch(error => {
-          this.$bvToast.toast(`${error.data.msg}`, {
+          this.$bvToast.toast(`${error.response.data.msg}`, {
             title: 'Notification',
             variant: 'danger',
             solid: true
@@ -384,7 +369,7 @@ export default {
           this.countThisWeek = response.data.data
         })
         .catch(error => {
-          this.$bvToast.toast(`${error.data.msg}`, {
+          this.$bvToast.toast(`${error.response.data.msg}`, {
             title: 'Notification',
             variant: 'danger',
             solid: true

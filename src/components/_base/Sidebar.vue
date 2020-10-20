@@ -65,25 +65,32 @@ export default {
     //   this.logout()
     // }
     isLogout() {
-      this.$bvModal.msgBoxConfirm('Do you want to exit?', {
-        title: 'Please Confirm',
-        size: 'sm',
-        buttonSize: 'sm',
-        okVariant: 'danger',
-        okTitle: 'Yes',
-        cancelTitle: 'No',
-        footerClass: 'p-2',
-        hideHeaderClose: false,
-        centered: true
-      }).then((value) => {
-        // console.log(value)
-        // console.log('ok berhasil')
-        // this.isLogout = value
-        value ? this.logout() : this.getProduct()
-      }).catch(error => {
-        console.log(error)
-        // An error occurred
-      })
+      this.$bvModal
+        .msgBoxConfirm('Do you want to exit?', {
+          title: 'Please Confirm',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Yes',
+          cancelTitle: 'No',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then(value => {
+          // console.log(value)
+          // console.log('ok berhasil')
+          // this.isLogout = value
+          value ? this.logout() : this.getProduct()
+        })
+        .catch(error => {
+          this.$bvToast.toast(`${error.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
+          // An error occurred
+        })
     }
   },
   computed: {
