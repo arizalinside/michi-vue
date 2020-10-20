@@ -8,9 +8,8 @@ export default {
   },
   mutations: {
     setCategory(state, payload) {
-      // console.log(payload)
       state.categoryItem = []
-      payload.data.map((value) => {
+      payload.data.map(value => {
         const setCategory = {
           ID: value.category_id,
           Name: value.category_name,
@@ -18,47 +17,49 @@ export default {
           Updated: value.category_updated_at.slice(0, 10)
         }
         state.categoryItem = [...state.categoryItem, setCategory]
-        // console.log(value)
       })
-      console.log(state.categoryItem)
     }
   },
   actions: {
     getCategories(context, payload) {
-      axios.get(`${process.env.VUE_APP_URL}/category`)
-        .then((response) => {
-          console.log(response.data)
-          context.commit('setCategory', response.data)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}/category`)
+          .then(response => {
+            context.commit('setCategory', response.data)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     },
     addCategories(context, payload) {
-      // console.log(payload)
       return new Promise((resolve, reject) => {
         axios
           .post(`${process.env.VUE_APP_URL}/category`, payload)
-          .then((response) => {
-            // console.log(response)
+          .then(response => {
             resolve(response.data)
           })
-          .catch((error) => {
-            console.log(error)
+          .catch(error => {
+            reject(error)
           })
       })
     },
     deleteCategory(context, payload) {
-      // console.log(payload)
-      context.state.categoryId = payload.item.ID
-      axios
-        .delete(`${process.env.VUE_APP_URL}/category/${context.state.categoryId}`)
-        .then((response) => {
-          console.log(response)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      return new Promise((resolve, reject) => {
+        context.state.categoryId = payload.item.ID
+        axios
+          .delete(
+            `${process.env.VUE_APP_URL}/category/${context.state.categoryId}`
+          )
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

@@ -52,23 +52,25 @@ export default {
   },
   actions: {
     getProduct(context) {
-      axios
-        .get(
-          `${process.env.VUE_APP_URL}/product?page=${context.state.page}&limit=${context.state.limit}&sort=${context.state.sort}`
-        )
-        .then(response => {
-          context.commit('setProduct', response.data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${process.env.VUE_APP_URL}/product?page=${context.state.page}&limit=${context.state.limit}&sort=${context.state.sort}`
+          )
+          .then(response => {
+            context.commit('setProduct', response.data)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     },
     addProducts(context, payload) {
       return new Promise((resolve, reject) => {
         axios
           .post(`${process.env.VUE_APP_URL}/product`, payload)
           .then(response => {
-            // console.log(response)
             resolve(response.data)
           })
           .catch(error => {
@@ -77,30 +79,34 @@ export default {
       })
     },
     searchProduct(context, payload) {
-      axios
-        .get(`${process.env.VUE_APP_URL}/product/search?keyword=${payload}`)
-        .then(response => {
-          context.commit('setSearchResult', response.data.data.searchResult)
-        })
-        .catch(error => {
-          console.log(error.response)
-        })
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}/product/search?keyword=${payload}`)
+          .then(response => {
+            context.commit('setSearchResult', response.data.data.searchResult)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     },
     getProductSetting(context, payload) {
-      axios
-        .get(
-          `${process.env.VUE_APP_URL}/product?page=${context.state.page}&limit=100&sort=product_name`
-        )
-        .then(response => {
-          console.log(response)
-          context.commit('setProductSetting', response.data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${process.env.VUE_APP_URL}/product?page=${context.state.page}&limit=100&sort=product_name`
+          )
+          .then(response => {
+            context.commit('setProductSetting', response.data)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     },
     patchProduct(context, payload) {
-      console.log(payload)
       return new Promise((resolve, reject) => {
         axios
           .patch(
@@ -108,12 +114,23 @@ export default {
             payload.form
           )
           .then(response => {
-            console.log(response)
             resolve(response.data)
           })
           .catch(error => {
             reject(error.response)
-            // console.log(error)
+          })
+      })
+    },
+    deleteProduct(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`${process.env.VUE_APP_URL}/product/${payload.item.ID}`)
+          .then(response => {
+            resolve(response)
+            // resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
           })
       })
     }

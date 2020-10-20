@@ -395,7 +395,6 @@ export default {
       )
     },
     minus(data) {
-      console.log(data)
       if (data.qty === 1) {
         this.removeCart(data)
       } else {
@@ -421,7 +420,6 @@ export default {
       return total
     },
     postOrder(data) {
-      console.log(data)
       for (let i = 0; i < data.length; i++) {
         const orderData = {
           product_id: data[i].product_id,
@@ -436,10 +434,13 @@ export default {
         .post(`${process.env.VUE_APP_URL}/orders`, setData)
         .then(response => {
           this.invoice = response.data.data.history_invoices
-          console.log(response.data)
         })
         .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(`${error.response.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
         })
     },
     cancelCart() {

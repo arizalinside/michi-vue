@@ -306,6 +306,7 @@ export default {
       'getProductSetting',
       'addProducts',
       'patchProduct',
+      'deleteProduct',
       'getCategories',
       'addCategories',
       'deleteCategory'
@@ -491,6 +492,11 @@ export default {
           if (value === true) {
             this.deleteProduct(data)
             this.getProductSetting()
+            this.$bvToast.toast('Product deleted', {
+              title: 'Notification',
+              variant: 'success',
+              solid: true
+            })
           } else {
             this.getProductSetting()
           }
@@ -504,7 +510,6 @@ export default {
         })
     },
     showDelBoxCat(data) {
-      // this.deleteCategory(data)
       this.$bvModal
         .msgBoxConfirm(`Are you sure want to delete ${data.item.Name} ?`, {
           title: 'Delete Category',
@@ -519,25 +524,40 @@ export default {
         })
         .then(value => {
           if (value === true) {
+            this.$bvToast.toast('Category deleted', {
+              title: 'Notification',
+              variant: 'success',
+              solid: true
+            })
             this.deleteCategory(data)
+            this.getCategories()
+          } else {
             this.getCategories()
           }
         })
         .catch(error => {
-          console.log(error)
-        })
-    },
-    deleteProduct(data) {
-      this.productId = data.item.ID
-      axios
-        .delete(`http://127.0.0.1:3001/product/${this.productId}`)
-        .then(response => {
-          location.reload()
-        })
-        .catch(error => {
-          console.log(error)
+          this.$bvToast.toast(`${error.response.data.msg}`, {
+            title: 'Notification',
+            variant: 'danger',
+            solid: true
+          })
         })
     }
+    // deleteProduct(data) {
+    //   this.productId = data.item.ID
+    //   axios
+    //     .delete(`${process.env.VUE_APP_URL}/product/${this.productId}`)
+    //     .then(response => {
+    //       console.log(response)
+    //     })
+    //     .catch(error => {
+    //       this.$bvToast.toast(`${error.response.data.msg}`, {
+    //         title: 'Notification',
+    //         variant: 'danger',
+    //         solid: true
+    //       })
+    //     })
+    // }
     // deleteCategory(data) {
     //   console.log(data)
     // this.categoryId = data.item.category_id
