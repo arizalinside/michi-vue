@@ -79,7 +79,7 @@
             >
               <b-card
                 :title="item.product_name"
-                :img-src="'http://127.0.0.1:3001/' + item.product_image"
+                :img-src="urlAPI + '/' + item.product_image"
                 img-alt="Image"
                 img-top
                 tag="article"
@@ -157,7 +157,7 @@
             <b-row v-for="(item, index) in cart" :key="index" class="cart-list">
               <b-col cols="4">
                 <b-img
-                  :src="'http://127.0.0.1:3001/' + item.product_image"
+                  :src="urlAPI + '/' + item.product_image"
                   class="cart-image"
                   fluid
                 />
@@ -299,7 +299,8 @@ export default {
       invoice: null,
       boxTwo: '',
       currentPage: 1,
-      isSearch: false
+      isSearch: false,
+      urlAPI: process.env.VUE_APP_URL
     }
   },
   created() {
@@ -432,7 +433,7 @@ export default {
         orders: this.setOrder
       }
       axios
-        .post('http://127.0.0.1:3001/orders', setData)
+        .post(`${process.env.VUE_APP_URL}/orders`, setData)
         .then(response => {
           this.invoice = response.data.data.history_invoices
           console.log(response.data)
