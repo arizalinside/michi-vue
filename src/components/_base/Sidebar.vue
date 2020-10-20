@@ -54,16 +54,8 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Sidebar',
-  data() {
-    return {
-      // user: ''
-    }
-  },
   methods: {
     ...mapActions(['getProduct', 'logout']),
-    // isLogout() {
-    //   this.logout()
-    // }
     isLogout() {
       this.$bvModal
         .msgBoxConfirm('Do you want to exit?', {
@@ -78,9 +70,12 @@ export default {
           centered: true
         })
         .then(value => {
+<<<<<<< HEAD
           // console.log(value)
           // console.log('ok berhasil')
           // this.isLogout = value
+=======
+>>>>>>> 4d1b2f1e7d98a1e1819b3366eee286cb6ed205d9
           value ? this.logout() : this.getProduct()
         })
         .catch(error => {
@@ -89,7 +84,10 @@ export default {
             variant: 'danger',
             solid: true
           })
+<<<<<<< HEAD
           // An error occurred
+=======
+>>>>>>> 4d1b2f1e7d98a1e1819b3366eee286cb6ed205d9
         })
     }
   },

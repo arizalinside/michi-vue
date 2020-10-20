@@ -107,7 +107,6 @@ export default {
       })
     },
     patchProduct(context, payload) {
-      console.log(payload)
       return new Promise((resolve, reject) => {
         axios
           .patch(
@@ -119,6 +118,22 @@ export default {
           })
           .catch(error => {
             reject(error.response)
+<<<<<<< HEAD
+=======
+          })
+      })
+    },
+    deleteProduct(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`${process.env.VUE_APP_URL}/product/${payload.item.ID}`)
+          .then(response => {
+            resolve(response)
+            // resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+>>>>>>> 4d1b2f1e7d98a1e1819b3366eee286cb6ed205d9
           })
       })
     }

@@ -9,7 +9,7 @@ export default {
   mutations: {
     setCategory(state, payload) {
       state.categoryItem = []
-      payload.data.map((value) => {
+      payload.data.map(value => {
         const setCategory = {
           ID: value.category_id,
           Name: value.category_name,
@@ -23,12 +23,22 @@ export default {
   actions: {
     getCategories(context, payload) {
       return new Promise((resolve, reject) => {
+<<<<<<< HEAD
         axios.get(`${process.env.VUE_APP_URL}/category`)
           .then((response) => {
             context.commit('setCategory', response.data)
             resolve(response)
           })
           .catch((error) => {
+=======
+        axios
+          .get(`${process.env.VUE_APP_URL}/category`)
+          .then(response => {
+            context.commit('setCategory', response.data)
+            resolve(response)
+          })
+          .catch(error => {
+>>>>>>> 4d1b2f1e7d98a1e1819b3366eee286cb6ed205d9
             reject(error)
           })
       })
@@ -37,10 +47,17 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .post(`${process.env.VUE_APP_URL}/category`, payload)
+<<<<<<< HEAD
           .then((response) => {
             resolve(response.data)
           })
           .catch((error) => {
+=======
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+>>>>>>> 4d1b2f1e7d98a1e1819b3366eee286cb6ed205d9
             reject(error)
           })
       })
@@ -49,11 +66,21 @@ export default {
       return new Promise((resolve, reject) => {
         context.state.categoryId = payload.item.ID
         axios
+<<<<<<< HEAD
           .delete(`${process.env.VUE_APP_URL}/category/${context.state.categoryId}`)
           .then((response) => {
             resolve(response)
           })
           .catch((error) => {
+=======
+          .delete(
+            `${process.env.VUE_APP_URL}/category/${context.state.categoryId}`
+          )
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+>>>>>>> 4d1b2f1e7d98a1e1819b3366eee286cb6ed205d9
             reject(error)
           })
       })

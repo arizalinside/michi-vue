@@ -59,34 +59,43 @@ export default {
   },
   actions: {
     getHistoryToday(context) {
-      axios
-        .get(`${process.env.VUE_APP_URL}/history/today`)
-        .then(response => {
-          context.commit('setHistoryToday', response.data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}/history/today`)
+          .then(response => {
+            context.commit('setHistoryToday', response.data)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     },
     getHistoryWeek(context) {
-      axios
-        .get(`${process.env.VUE_APP_URL}/history/week`)
-        .then(response => {
-          context.commit('setHistoryWeek', response.data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}/history/week`)
+          .then(response => {
+            context.commit('setHistoryWeek', response.data)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     },
     getHistoryMonth(context) {
-      axios
-        .get(`${process.env.VUE_APP_URL}/history/month`)
-        .then(response => {
-          context.commit('setHistoryMonth', response.data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}/history/month`)
+          .then(response => {
+            context.commit('setHistoryMonth', response.data)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {
